@@ -27,7 +27,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    display: none;
 }
 
 .text {
@@ -53,6 +52,7 @@
     color: white;
     font-family: --f;
     text-align: center;
+    display: none;
 }
 
 .confirm {
@@ -98,6 +98,7 @@
     font-size: 1vw;
     margin-bottom: 0.5vw;
     text-shadow: 0 .3vh 0 black;
+    display: none;
 }
 
 .title {
