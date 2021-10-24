@@ -1,5 +1,9 @@
+local createdPeds = createdPeds or {}
+local currentPed = nil
 local isLaundryOpen = false
 local laundryZone, insideZone
+
+local insert = table.insert
 
 ---Returns a GTA style notification
 ---@param message string
@@ -32,7 +36,6 @@ local function showFloatingNotification(message, coords)
 end
 
 ---Loads a notification
----@param state boolean
 ---@param ped number
 ---@param message string
 ---@param percentage number
@@ -54,6 +57,46 @@ local function showNotification(ped, message, percentage)
     end
 end
 
+---Returns/inserts a created ped
+---@param model string
+---@param coords table
+---@param dict string
+---@param anim string
+---@param scene string
+---@return number
+local function createPed(model, coords, dict, anim, scene)
+    RequestModel(model)
+    local timeout = 0
+    while not HasModelLoaded(model) and timeout < 1500 do
+        timeout = timeout + 1
+        Wait(1)
+    end
+
+    local cPed = CreatePed(4, model, coords.x, coords.y, coords.z - 1.0, coords.w, false, false)
+    FreezeEntityPosition(cPed, true)
+    SetEntityInvincible(cPed, true)
+    SetBlockingOfNonTemporaryEvents(cPed, true)
+    SetPedFleeAttributes(cPed, 0, false)
+    SetPedCombatAttributes(cPed, 17, true)
+
+    if Config.Anim and dict then
+        local timeout2 = 0
+        RequestAnimDict(dict)
+        while not HasAnimDictLoaded(dict) and timeout2 < 1500 do
+            timeout2 = timeout2 + 1
+            Wait(1)
+        end
+        TaskPlayAnim(cPed, dict, anim, 0.5, 1.0, -1, 1, 0, false, false, false)
+    end
+
+    if not Config.Anim and scene then
+        TaskStartScenarioInPlace(cPed, scene, 0, true)
+    end
+
+    insert(createdPeds, cPed)
+    return cPed
+end
+
 for _, v in pairs(Config.LaundryZones) do
     laundryZone = ComboZone:Create({v.coords}, {
         name = v.coords.name,
@@ -64,14 +107,23 @@ for _, v in pairs(Config.LaundryZones) do
         if isPointInside then
             if not insideZone then
                 insideZone = true
-                if isInTime() and not isLaundryOpen then
-                    showNotification(PlayerPedId(), Config.Locale.OpenZone:format(zone.name), zone.data.percentage)
+                if not GlobalState.ActiveLaundering then
+                    if isInTime() and not isLaundryOpen then
+                        showNotification(PlayerPedId(), Config.Locale.OpenZone:format(zone.name), zone.data.percentage)
+                        currentPed = createPed(zone.data.pedModel, zone.center, zone.data.dict, zone.data.anim, zone.data.scene)
+                    end
+                else
+                    showNoti(Config.Locale.SomeoneCleaned)
                 end
             end
         else
             if insideZone then
                 insideZone = false
                 showNotification()
+                if DoesEntityExist(currentPed) then
+                    DeleteEntity(currentPed)
+                    currentPed = nil
+                end
             end
         end
     end)
@@ -93,4 +145,31 @@ RegisterNUICallback('getMoneyData', function(data, cb)
         end
     end
     cb({})
+end)
+
+AddEventHandler('onClientResourceStop', function(name)
+    if GetCurrentResourceName() == name then
+        for _, v in pairs(createdPeds) do
+            if DoesEntityExist(v) then
+                DeletePed(v)
+            end
+        end
+    end
+end)
+
+RegisterNetEvent('ev:updateData', function()
+    if GlobalState.ActiveLaundering then
+        local duration = GetGameTimer() + Config.DefaultTime
+        CreateThread(function()
+            while GlobalState.ActiveLaundering do
+                if GetGameTimer() > duration then
+                    local data = {
+                        state = 'yes, please'
+                    }
+                    TriggerServerEvent('ev:launderData', data)
+                end
+                Wait(1000)
+            end
+        end)
+    end
 end)

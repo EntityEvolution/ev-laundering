@@ -69,37 +69,44 @@ RegisterNetEvent('ev:launderData', function(data)
     end
 
     if data then
-        local input = data.cantiInput
-        if not type(input) == "string" then
-            --DropPlayer(playerId, 'sus')
-            return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
-        end
-        if math.ceil((tonumber(input) / 100) * data.porcentaje) == data.cantiPorcentaje then
-            if tonumber(input) < 0 then
+        GlobalState.ActiveLaundering = false
+        if data.cantiInput then
+            local input = data.cantiInput
+            if not type(input) == "string" then
                 --DropPlayer(playerId, 'sus')
                 return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
-            end 
-            if DoesPlayerHaveMoney(playerId, tonumber(input)) then
-                local quantity = (tonumber(input) - data.cantiPorcentaje)
-                if state == 'none' then
-                    print('You have +$' .. tostring(quantity) .. ' now!')
-                elseif state == 'esx' then
-                    local xPlayer = Framework.GetPlayerFromId(playerId)
-                    xPlayer.removeAccountMoney('black_money', quantity)
-                    xPlayer.showNotification('You have +$' .. tostring(quantity) .. ' now!')
-                elseif state == 'qbcore' then
-                    local xPlayer = Framework.Functions.GetPlayer(playerId)
-                    local blackMoney = xPlayer.Functions.GetItemByName('markedbills')
-                    quantity = tonumber(input)
-                    local worth = math.ceil(blackMoney.info.worth - (data.porcentaje / 100) * blackMoney.info.worth)  --(blackMoney.info.worth * 100) / math.ceil(data.porcentaje / 100) bombay fix
-                    xPlayer.Functions.RemoveItem('markedbills', quantity)
-                    xPlayer.Functions.AddMoney('cash', worth * quantity)
-                    TriggerClientEvent('QBCore:Notify', playerId ,'Congrats, you just washed $' .. worth * quantity , 'success')
-                end
             end
-        else
-            --DropPlayer(playerId, 'sus')
-            return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
+            if math.ceil((tonumber(input) / 100) * data.porcentaje) == data.cantiPorcentaje then
+                if tonumber(input) < 0 then
+                    --DropPlayer(playerId, 'sus')
+                    return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
+                end 
+                if DoesPlayerHaveMoney(playerId, tonumber(input)) then
+                    local quantity = (tonumber(input) - data.cantiPorcentaje)
+                    if state == 'none' then
+                        print('You have +$' .. tostring(quantity) .. ' now!')
+                    elseif state == 'esx' then
+                        local xPlayer = Framework.GetPlayerFromId(playerId)
+                        xPlayer.removeAccountMoney('black_money', quantity)
+                        xPlayer.showNotification('You have +$' .. tostring(quantity) .. ' now!')
+                    elseif state == 'qbcore' then
+                        local xPlayer = Framework.Functions.GetPlayer(playerId)
+                        local blackMoney = xPlayer.Functions.GetItemByName('markedbills')
+                        quantity = tonumber(input)
+                        local worth = math.ceil(blackMoney.info.worth - (data.porcentaje / 100) * blackMoney.info.worth)  --(blackMoney.info.worth * 100) / math.ceil(data.porcentaje / 100) bombay fix
+                        xPlayer.Functions.RemoveItem('markedbills', quantity)
+                        xPlayer.Functions.AddMoney('cash', worth * quantity)
+                        TriggerClientEvent('QBCore:Notify', playerId ,'Congrats, you just washed $' .. worth * quantity , 'success')
+                    end
+                    GlobalState.ActiveLaundering = true
+                    Wait(1000)
+                    TriggerClientEvent('ev:updateData', -1)
+                    return
+                end
+            else
+                --DropPlayer(playerId, 'sus')
+                return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
+            end
         end
     end
 end)
