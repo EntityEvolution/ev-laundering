@@ -56,7 +56,8 @@ RegisterNetEvent('ev:launderData', function(data)
             --DropPlayer(playerId, 'sus')
             return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
         end
-        if math.floor((tonumber(input) / 100) * data.porcentaje) == data.cantiPorcentaje then
+        print(math.ceil((tonumber(input) / 100) * data.porcentaje), data.cantiPorcentaje)
+        if math.ceil((tonumber(input) / 100) * data.porcentaje) == data.cantiPorcentaje then
             if DoesPlayerHaveMoney(playerId, tonumber(input)) then
                 if state == 'none' then
                     print('Hey, you have money!')
