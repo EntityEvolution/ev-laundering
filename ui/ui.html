@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Washing UI</title>
+    <link href="/ui/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container" id="contrato">
+        <div class="contract" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+            <h1 class="title">Money laundering</h1>
+            <p class="text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+            <input type="number" maxlength="7" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" id="cantidad" class="cantidad" placeholder="Quantity to wash">
+            <span class="agreement" id="agreement">0% will be taken as taxes</span>
+            <div class="confirm" id="confirm"><span>Confirm</span></div>
+        </div>
+    </div>
+    <script src="/ui/js/nui.js" type="text/javascript"></script>
+    <script src="/ui/js/script.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/ui/js/vanilla-tilt.js"></script>
+</body>
+</html>

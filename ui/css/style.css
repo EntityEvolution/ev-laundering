@@ -1,0 +1,108 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;700&display=swap');
+
+@font-face {
+    font-family: --f;
+    src: url(/ui/fonts/gotham.otf);
+}
+
+* {
+    overflow: hidden;
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+
+}
+
+.container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0%;
+    left: 0%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.text {
+    font-size: 1.4vw;
+    margin-left: 1vw;
+    margin-right: 1vw;
+    text-shadow: 0 .5vh 0 black;
+}
+
+
+.contract {
+    background-image: url("https://media1.thehungryjpeg.com/thumbs2/ori_3768197_svt7n3n5q589r119xy4ouw1sizj63299h5utqip4_black-crumpled-paper-textures.jpg");
+    background-size: cover;
+    height: 45vw;
+    width: 35vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1.5vw;
+    color: white;
+    font-family: --f;
+    text-align: center;
+    clip-path: polygon(0% 0%, 12% 0, 23% 0, 34% 1%, 49% 0, 56% 0, 66% 0, 71% 0, 82% 0%, 91% 0, 97% 0, 100% 0, 100% 33%, 98% 46%, 100% 52%, 99% 100%, 71% 100%, 1% 100%, 1% 54%, 2% 46%, 1% 39%);    width: 35vw;
+}
+
+.confirm {
+    font-weight: 700;
+    border-bottom: 2px solid white;
+    padding: 0 .5vh;
+    transition: 0.2s ease-in-out;
+
+    font-family: 'Titillium Web', sans-serif;
+}
+
+.confirm:hover  {
+    transform: scale(1.1);
+    border-bottom: 3px solid rgb(179, 27, 27);
+    padding: 0 2vh;
+    color: red;
+    text-shadow: 0 .3vh 0 black;
+    box-shadow: 0 .2vh 0 0 black;
+
+}
+
+
+.cantidad:focus {
+    border: white 2px solid;
+    background-color: black;
+    box-shadow: 0 0 .8vh white;
+
+    color: white;
+}
+
+.cantidad {
+    padding: 1vh;
+    border-radius: 0.5vh;
+    border: none !important;
+    font-family: --f;
+    text-align: center;
+    font-size: 2vh;
+    box-shadow: 0 0 .8vh black;
+    color: black;
+    background-color: rgb(255, 255, 255);
+    transition: 0.2s ease-in-out;
+    margin-bottom: 1vw;
+}
+
+.agreement {
+    transition: 0.2s ease-in-out;
+    font-size: 1vw;
+    margin-bottom: 0.5vw;
+    text-shadow: 0 .3vh 0 black;
+    display: none;
+}
+
+.title {
+    text-shadow: 0 .5vh 0 black;
+}
