@@ -24,7 +24,7 @@
     height: 100%;
     top: 0%;
     left: 0%;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
 }
@@ -52,7 +52,6 @@
     color: white;
     font-family: --f;
     text-align: center;
-    display: none;
 }
 
 .confirm {
@@ -94,7 +93,6 @@
 
 .agreement {
     transition: 0.2s ease-in-out;
-    /* display: none; */
     font-size: 1vw;
     margin-bottom: 0.5vw;
     text-shadow: 0 .3vh 0 black;

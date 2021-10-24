@@ -1,39 +1,43 @@
 window.addEventListener('load', () => {
-    let porcentaje = 50
+    const cont = doc.getElementById('contrato');
+    const agree = doc.getElementById('agreement');
+    const count = doc.getElementById('cantidad');
+
+    let porcentaje = undefined;
     this.addEventListener('message', e => {
         switch (e.data.action) {
             case 'openMenu':
-                porcentaje = e.data.zonePercentage
-                doc.getElementById('contrato').style.display = 'flex';
+                porcentaje = e.data.zonePercentage;
+                cont.style.display = 'flex';
             break;
         }
     })
 
-    doc.getElementById('cantidad').addEventListener('input', e => {
+    count.addEventListener('input', e => {
         if (e.target.value) {
-            doc.getElementById('agreement').style.display = 'flex';
+            agree.style.display = 'flex';
         } else {
-            doc.getElementById('agreement').style.display = 'none';
-
+            agree.style.display = 'none';
         }
-        document.querySelector('#agreement').textContent = (e.target.value / 100) * porcentaje + " Will be retired from the total" ;
+        agree.textContent = `$${Math.ceil((e.target.value / 100) * porcentaje)} will be removed from your black money`;
      });
 
     doc.getElementById('confirm').addEventListener('click', e => {
-        const cantiInput = document.querySelector('#cantidad').value;
-        const cantiPorcentaje = (cantiInput / 100) * porcentaje
-        console.log({cantiInput: cantiInput, cantiPorcentaje: cantiPorcentaje, porcentaje: porcentaje})
+        const cantiInput = count.value;
+        const cantiPorcentaje = Math.ceil((cantiInput / 100) * porcentaje);
         if (!cantiInput) {
-            return
+            return fetchNUI('getMoneyData', false);
         } else {
             fetchNUI('getMoneyData', {cantiInput: cantiInput, cantiPorcentaje: cantiPorcentaje, porcentaje: porcentaje});
+            cont.style.display = 'none';
+            porcentaje = undefined;
         }
      });
 
     doc.addEventListener('keyup', e => {
         if (e.key == 'Escape') {
-            doc.getElementById('contrato').style.display = 'none';
-            fetchNUI('getMoneyData');
+            cont.style.display = 'none';
+            fetchNUI('getMoneyData', {close: true});
         }
     });
 

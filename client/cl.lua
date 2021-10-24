@@ -1,13 +1,13 @@
 local isLaundryOpen = false
-local laundryZone
+local laundryZone, insideZone
 
-RegisterNUICallback('getMoneyData', function(data, cb)
-    if isLaundryOpen then
-        print(data)
-    end
-    SetNuiFocus(false, false)
-    cb({})
-end)
+---Returns a GTA style notification
+---@param message string
+local function showNoti(message)
+    SetNotificationTextEntry('STRING')
+    AddTextComponentString(message)
+    DrawNotification(0, 1)
+end
 
 ---Returns if player between two hours
 ---@return boolean
@@ -32,22 +32,26 @@ local function showFloatingNotification(message, coords)
 end
 
 ---Loads a notification
+---@param state boolean
 ---@param ped number
 ---@param message string
-local function showNotification(ped, message)
-    CreateThread(function()
-        while true do
-            local coords = GetEntityCoords(ped)
-            showFloatingNotification(message, coords)
-            if IsControlJustReleased(0, Config.ContractKey) then
-                isLaundryOpen = true
-                SendNUIMessage({action = 'openMenu'})
-                SetNuiFocus(true, true)
-                break
+---@param percentage number
+local function showNotification(ped, message, percentage)
+    if not isLaundryOpen and insideZone then
+        CreateThread(function()
+            while insideZone do
+                local coords = GetEntityCoords(ped)
+                showFloatingNotification(message, coords)
+                if IsControlJustReleased(0, Config.ContractKey) then
+                    isLaundryOpen = true
+                    SendNUIMessage({action = 'openMenu', zonePercentage = percentage})
+                    SetNuiFocus(true, true)
+                    break
+                end
+                Wait(5)
             end
-            Wait(5)
-        end
-    end)
+        end)
+    end
 end
 
 for _, v in pairs(Config.LaundryZones) do
@@ -56,11 +60,37 @@ for _, v in pairs(Config.LaundryZones) do
         debugPoly = Config.Debug
     })
 
-    laundryZone:onPlayerInOut(function(isPointInside, point, zone)
+    laundryZone:onPlayerInOut(function(isPointInside, _, zone)
         if isPointInside then
-            if isInTime() then
-                showNotification(PlayerPedId(), Config.Locale.OpenZone:format(zone.name))
+            if not insideZone then
+                insideZone = true
+                if isInTime() and not isLaundryOpen then
+                    showNotification(PlayerPedId(), Config.Locale.OpenZone:format(zone.name), zone.data.percentage)
+                end
+            end
+        else
+            if insideZone then
+                insideZone = false
+                showNotification()
             end
         end
     end)
 end
+
+RegisterNUICallback('getMoneyData', function(data, cb)
+    if isLaundryOpen then
+        if data then
+            if not data.close then
+                TriggerServerEvent('ev:launderData', data)
+                SetNuiFocus(false, false)
+                isLaundryOpen = false
+            else
+                SetNuiFocus(false, false)
+                isLaundryOpen = false
+            end
+        else
+            showNoti(Config.Locale.NoData)
+        end
+    end
+    cb({})
+end)
