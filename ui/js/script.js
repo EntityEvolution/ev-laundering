@@ -20,8 +20,9 @@ window.addEventListener('load', () => {
      });
 
     doc.getElementById('confirm').addEventListener('click', e => {
-        const cantiInput = document.querySelector('#cantidad').textContent;
+        const cantiInput = document.querySelector('#cantidad').value;
         const cantiPorcentaje = (cantiInput / 100) * porcentaje
+        console.log({cantiInput: cantiInput, cantiPorcentaje: cantiPorcentaje, porcentaje: porcentaje})
         if (!cantiInput) {
             return
         } else {
