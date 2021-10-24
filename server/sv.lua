@@ -77,8 +77,9 @@ local function notifyPolice(message, playerCoords)
                 xPlayer.showNotification(message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))))
             end
         elseif state == 'qbcore' then
-            local xPlayer = Framework.Functions.GetPlayer(players[i])
+            local xPlayer = Framework.Functions.GetPlayer(tonumber(players[i]))
             if xPlayer.PlayerData.job.name == Config.PoliceJob and xPlayer.PlayerData.job.onduty then
+                TriggerClientEvent("chat:addMessage", players[i], "911 Report - " .. message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))))
                 TriggerClientEvent('QBCore:Notify', players[i], message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))), 'success')
             end
         end
