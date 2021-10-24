@@ -88,7 +88,13 @@ RegisterNetEvent('ev:launderData', function(data)
                     xPlayer.removeAccountMoney('black_money', quantity)
                     xPlayer.showNotification('You have +$' .. tostring(quantity) .. ' now!')
                 elseif state == 'qbcore' then
-                    print('Hey, you have money!')
+                    local xPlayer = Framework.Functions.GetPlayer(playerId)
+                    local blackMoney = xPlayer.Functions.GetItemByName('markedbills')
+                    local quantity = blackMoney.amount
+                    local worth = blackMoney.info.worth
+                    xPlayer.Functions.RemoveItem(quantity)
+                    xPlayer.Functions.AddMoney(worth * quantity)
+                    TriggerEvent('QBCore:Notify', 'Congrats, you just washed $' .. worth * quantity , 'success')
                 end
             end
         else
