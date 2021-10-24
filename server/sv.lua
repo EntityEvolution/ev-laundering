@@ -90,7 +90,7 @@ RegisterNetEvent('ev:launderData', function(data)
                 elseif state == 'qbcore' then
                     local xPlayer = Framework.Functions.GetPlayer(playerId)
                     local blackMoney = xPlayer.Functions.GetItemByName('markedbills')
-                    local quantity = tonumber(input)
+                    quantity = tonumber(input)
                     local worth = math.ceil(blackMoney.info.worth - (data.porcentaje / 100) * blackMoney.info.worth)  --(blackMoney.info.worth * 100) / math.ceil(data.porcentaje / 100) bombay fix
                     xPlayer.Functions.RemoveItem('markedbills', quantity)
                     xPlayer.Functions.AddMoney('cash', worth * quantity)
