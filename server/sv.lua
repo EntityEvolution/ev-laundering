@@ -14,7 +14,7 @@ local function DoesPlayerHaveMoney(playerId)
     elseif state == 'esx' then
         
     elseif state == 'qbcore' then
-
+        
     elseif state == 'vrp' then
 
     end
@@ -32,7 +32,7 @@ RegisterNetEvent('ev:launderData', function(data)
 
     if data then
         local input = data.cantiInput
-        if not data.cantiInput == "string" then
+        if not type(data.cantiInput) == "string" then
             --DropPlayer(playerId, 'sus')
             return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
         end
