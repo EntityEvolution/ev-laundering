@@ -70,10 +70,11 @@ local function notifyPolice(message, playerCoords)
         if state == 'none' then
             return print('Yeah no framework lmao')
         end
-        local coords = GetEntityCoords(GetPlayerPed(players[i]))
+        local coords = GetEntityCoords(GetPlayerPed(tonumber(players[i])))
         if state == 'esx' then
-            local xPlayer = Framework.GetPlayerFromId(players[i])
-            if xPlayer.getJob() == Config.PoliceJob then
+            local xPlayer = Framework.GetPlayerFromId(tonumber(players[i]))
+            if xPlayer.getJob().name == Config.PoliceJob then
+                print('test')
                 xPlayer.showNotification(message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))))
             end
         elseif state == 'qbcore' then
