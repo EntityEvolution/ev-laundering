@@ -27,6 +27,7 @@
     display: none;
     justify-content: center;
     align-items: center;
+    
 }
 
 .text {
@@ -40,7 +41,6 @@
 .contract {
     background-image: url("https://media1.thehungryjpeg.com/thumbs2/ori_3768197_svt7n3n5q589r119xy4ouw1sizj63299h5utqip4_black-crumpled-paper-textures.jpg");
     background-size: cover;
-    box-shadow: 0 0 .8vh black;
     height: 45vw;
     width: 35vw;
     position: relative;
@@ -52,6 +52,7 @@
     color: white;
     font-family: --f;
     text-align: center;
+    clip-path: polygon(0% 0%, 12% 0, 23% 0, 34% 1%, 49% 0, 56% 0, 66% 0, 71% 0, 82% 0%, 91% 0, 97% 0, 100% 0, 100% 33%, 98% 46%, 100% 52%, 99% 100%, 71% 100%, 1% 100%, 1% 54%, 2% 46%, 1% 39%);    width: 35vw;
 }
 
 .confirm {
@@ -66,6 +67,11 @@
 .confirm:hover  {
     transform: scale(1.1);
     border-bottom: 3px solid rgb(179, 27, 27);
+    padding: 0 2vh;
+    color: red;
+    text-shadow: 0 .3vh 0 black;
+    box-shadow: 0 .2vh 0 0 black;
+
 }
 
 
