@@ -29,10 +29,10 @@ local function DoesPlayerHaveMoney(playerId, resultMoney)
                         end
                     else
                         --DropPlayer(playerId, 'sus')
-                        return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
+                        return false, print(Config.Locale.AlertDanger:format(tostring(playerId), GetCurrentResourceName()))
                     end
                 else
-                    xPlayer.showNotification('You do not have enough money!')
+                    xPlayer.showNotification(Config.Locale.NoMoney)
                 end
             end
         end
@@ -53,7 +53,7 @@ local function DoesPlayerHaveMoney(playerId, resultMoney)
                         end
                     end
                 else
-                    TriggerClientEvent('QBCore:Notify', playerId, 'You do not have enough money or you are putting more than you have!', 'error')
+                    TriggerClientEvent('QBCore:Notify', playerId, Config.Locale.NoMoney, 'error')
                 end
             end
         end
@@ -61,34 +61,54 @@ local function DoesPlayerHaveMoney(playerId, resultMoney)
     return false
 end
 
+---Creates a notification for all police
+---@param message string
+---@param playerCoords table
+local function notifyPolice(message, playerCoords)
+    local players = GetPlayers()
+    for i=1, #players do
+        if state == 'none' then
+            return print('Yeah no framework lmao')
+        end
+        local coords = GetEntityCoords(GetPlayerPed(players[i]))
+        if state == 'esx' then
+            local xPlayer = Framework.GetPlayerFromId(players[i])
+            if xPlayer.getJob() == Config.PoliceJob then
+                xPlayer.showNotification(message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))))
+            end
+        elseif state == 'qbcore' then
+            TriggerClientEvent('QBCore:Notify', players[i], message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))), 'success')
+        end
+    end
+end
+
 RegisterNetEvent('ev:launderData', function(data)
     local playerId <const> = source
     if type(data) ~="table" then
         --DropPlayer(playerId, 'Sus')
-        return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
+        return false, print(Config.Locale.AlertDanger:format(tostring(playerId), GetCurrentResourceName()))
     end
-
     if data then
         GlobalState.ActiveLaundering = false
         if data.cantiInput then
             local input = data.cantiInput
             if not type(input) == "string" then
                 --DropPlayer(playerId, 'sus')
-                return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
+                return false, print(Config.Locale.AlertDanger:format(tostring(playerId), GetCurrentResourceName()))
             end
             if math.ceil((tonumber(input) / 100) * data.porcentaje) == data.cantiPorcentaje then
                 if tonumber(input) < 0 then
                     --DropPlayer(playerId, 'sus')
-                    return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
+                    return false, print(Config.Locale.AlertDanger:format(tostring(playerId), GetCurrentResourceName()))
                 end 
                 if DoesPlayerHaveMoney(playerId, tonumber(input)) then
                     local quantity = (tonumber(input) - data.cantiPorcentaje)
                     if state == 'none' then
-                        print('You have +$' .. tostring(quantity) .. ' now!')
+                        print(Config.Locale.AlertSuccess:format(quantity, input))
                     elseif state == 'esx' then
                         local xPlayer = Framework.GetPlayerFromId(playerId)
                         xPlayer.removeAccountMoney('black_money', quantity)
-                        xPlayer.showNotification('You have +$' .. tostring(quantity) .. ' now!')
+                        xPlayer.showNotification(Config.Locale.AlertSuccess:format(quantity, input))
                     elseif state == 'qbcore' then
                         local xPlayer = Framework.Functions.GetPlayer(playerId)
                         local blackMoney = xPlayer.Functions.GetItemByName('markedbills')
@@ -96,12 +116,15 @@ RegisterNetEvent('ev:launderData', function(data)
                         local worth = math.ceil(blackMoney.info.worth - (data.porcentaje / 100) * blackMoney.info.worth)  --(blackMoney.info.worth * 100) / math.ceil(data.porcentaje / 100) bombay fix
                         xPlayer.Functions.RemoveItem('markedbills', quantity)
                         xPlayer.Functions.AddMoney('cash', worth * quantity)
-                        TriggerClientEvent('QBCore:Notify', playerId ,'Congrats, you just washed $' .. worth * quantity , 'success')
+                        TriggerClientEvent('QBCore:Notify', playerId, Config.Locale.AlertSuccess:format(worth * quantity, blackMoney.info.worth * quantity), 'success')
                     end
                     local luck = false
                     GlobalState.ActiveLaundering = true
                     if math.random(Config.Min, Config.Max) > Config.Prob and Config.Attack then
                         luck = true
+                        if Config.NotifyPolice then
+                            notifyPolice(Config.Locale.AlertPolice, GetEntityCoords(GetPlayerPed(playerId)))
+                        end
                     end
                     Wait(1000)
                     TriggerClientEvent('ev:updateData', -1, luck)
@@ -109,7 +132,7 @@ RegisterNetEvent('ev:launderData', function(data)
                 end
             else
                 --DropPlayer(playerId, 'sus')
-                return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
+                return false, print(Config.Locale.AlertDanger:format(tostring(playerId), GetCurrentResourceName()))
             end
         end
     end
