@@ -19,18 +19,22 @@ window.addEventListener('load', () => {
         document.querySelector('#agreement').textContent = (e.target.value / 100) * porcentaje + " Will be retired from the total" ;
      });
 
-    // doc.getElementById('confirmar').addEventListener('click', e => {
-    //     const cantiInput = document.querySelector('#cantidad').textContent;
-    //     if (cantiInput == undefined) {
-    //         return
-    //     }
-    //  });
+    doc.getElementById('confirm').addEventListener('click', e => {
+        const cantiInput = document.querySelector('#cantidad').textContent;
+        const cantiPorcentaje = (cantiInput / 100) * porcentaje
+        if (!cantiInput) {
+            return
+        } else {
+            fetchNUI('getMoneyData', {cantiInput: cantiInput, cantiPorcentaje: cantiPorcentaje, porcentaje: porcentaje});
+        }
+     });
 
     doc.addEventListener('keyup', e => {
         if (e.key == 'Escape') {
             doc.getElementById('contrato').style.display = 'none';
-            fetchNUI('getMoneyData', cantiInput);
+            fetchNUI('getMoneyData');
         }
     });
 
 })
+
