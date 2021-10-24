@@ -16,5 +16,6 @@ Config.ContractKey = 38
 
 Config.Locale = {
     OpenZone = 'Open contract in %s',
-    NoData = 'No money was added'
+    NoData = 'No input was added!',
+    NegativeValue = 'You cannot clean a negative value!'
 }

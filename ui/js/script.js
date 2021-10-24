@@ -14,20 +14,28 @@ window.addEventListener('load', () => {
     })
 
     count.addEventListener('input', e => {
-        if (e.target.value) {
+        let val = e.target.value;
+        if (val) {
             agree.style.display = 'flex';
         } else {
             agree.style.display = 'none';
         }
-        agree.textContent = `$${Math.ceil((e.target.value / 100) * porcentaje)} will be removed from your black money`;
+        if (val < 0) {
+            agree.textContent = 'Cannot have a negative input!'
+        } else {
+            agree.textContent = `$${Math.ceil((val / 100) * porcentaje)} will be removed from your black money!`;
+        }
      });
 
     doc.getElementById('confirm').addEventListener('click', e => {
         const cantiInput = count.value;
         const cantiPorcentaje = Math.ceil((cantiInput / 100) * porcentaje);
         if (!cantiInput) {
-            return fetchNUI('getMoneyData', false);
+            return fetchNUI('getMoneyData', {notify: 'NoData'});
         } else {
+            if (cantiInput <= 0) {
+                return fetchNUI('getMoneyData', {notify: 'NegativeValue'});
+            }
             fetchNUI('getMoneyData', {cantiInput: cantiInput, cantiPorcentaje: cantiPorcentaje, porcentaje: porcentaje});
             cont.style.display = 'none';
             porcentaje = undefined;
@@ -37,7 +45,7 @@ window.addEventListener('load', () => {
     doc.addEventListener('keyup', e => {
         if (e.key == 'Escape') {
             cont.style.display = 'none';
-            fetchNUI('getMoneyData', {close: true});
+            fetchNUI('getMoneyData', false);
         }
     });
 

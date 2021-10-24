@@ -1,4 +1,4 @@
-local state <const> = GetResourceState('es_extended') == 'started' and 'esx' or GetResourceState('vrp') == 'started' and 'vrp' or GetResourceState('qb-core') == 'started' and 'qbcore' or 'none'
+local state <const> = GetResourceState('es_extended') == 'started' and 'esx' or GetResourceState('qb-core') == 'started' and 'qbcore' or 'none'
 
 GlobalState.ActiveLaundering = false
 
@@ -20,7 +20,7 @@ local function DoesPlayerHaveMoney(playerId, resultMoney)
             local xPlayer = Framework.GetPlayerFromId(playerId)
             if xPlayer then
                 local blackMoney = xPlayer.getAccount('black_money').money
-                if blackMoney > 0 then
+                if blackMoney > 0 and blackMoney > resultMoney then
                     if resultMoney < 5000000 then
                         if (blackMoney - resultMoney) > 0 then
                             return true
@@ -31,6 +31,8 @@ local function DoesPlayerHaveMoney(playerId, resultMoney)
                         --DropPlayer(playerId, 'sus')
                         return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
                     end
+                else
+                    xPlayer.showNotification('You do not have enough money!')
                 end
             end
         end
@@ -50,11 +52,11 @@ local function DoesPlayerHaveMoney(playerId, resultMoney)
                             return false
                         end
                     end
+                else
+                    TriggerClientEvent('QBCore:Notify', playerId, 'You do not have enough money!', 'error')
                 end
             end
         end
-    elseif state == 'vrp' then
-
     end
     return false
 end
@@ -84,8 +86,6 @@ RegisterNetEvent('ev:launderData', function(data)
 
                 elseif state == 'qbcore' then
                     print('Hey, you have money!')
-                elseif state == 'vrp' then
-            
                 end
             end
         else

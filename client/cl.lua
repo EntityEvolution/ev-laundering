@@ -80,16 +80,16 @@ end
 RegisterNUICallback('getMoneyData', function(data, cb)
     if isLaundryOpen then
         if data then
-            if not data.close then
+            if not data.notify then
                 TriggerServerEvent('ev:launderData', data)
                 SetNuiFocus(false, false)
                 isLaundryOpen = false
             else
-                SetNuiFocus(false, false)
-                isLaundryOpen = false
+                showNoti(Config.Locale[data.notify])
             end
         else
-            showNoti(Config.Locale.NoData)
+            SetNuiFocus(false, false)
+            isLaundryOpen = false
         end
     end
     cb({})
