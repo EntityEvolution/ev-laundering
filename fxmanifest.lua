@@ -11,7 +11,10 @@ client_scripts {
     'config/config_cl.lua',
     'client/cl.lua'
 }
-server_script 'server/sv.lua'
+server_scripts  {
+    'config/config_sv.lua',
+    'server/sv.lua'
+}
 
 ui_page 'ui/ui.html'
 

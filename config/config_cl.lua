@@ -25,9 +25,12 @@ Config.DefaultTime = 5000 -- In milliseconds
 
 Config.ContractKey = 38 -- Currently E
 
+Config.PedAttack = 5 -- If Config.Attack on serverside its on false it will not spawn these
+
 Config.Locale = {
     OpenZone = 'Open contract in %s',
     NoData = 'No input was added!',
     NegativeValue = 'You cannot clean a negative value!',
     SomeoneCleaned = 'Someone already washed their money!'
 }
+

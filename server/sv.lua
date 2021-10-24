@@ -98,9 +98,15 @@ RegisterNetEvent('ev:launderData', function(data)
                         xPlayer.Functions.AddMoney('cash', worth * quantity)
                         TriggerClientEvent('QBCore:Notify', playerId ,'Congrats, you just washed $' .. worth * quantity , 'success')
                     end
-                    GlobalState.ActiveLaundering = true
+                    local luck = false
+                    if math.random(Config.Min, Config.Max) > Config.Prob and Config.Attack then
+                        GlobalState.ActiveLaundering = true
+                        luck = true
+                    elseif not Config.Attack then
+                        GlobalState.ActiveLaundering = true
+                    end
                     Wait(1000)
-                    TriggerClientEvent('ev:updateData', -1)
+                    TriggerClientEvent('ev:updateData', -1, luck)
                     return
                 end
             else

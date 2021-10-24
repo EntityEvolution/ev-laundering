@@ -57,6 +57,7 @@ local function showNotification(ped, message, percentage)
     end
 end
 
+
 ---Returns/inserts a created ped
 ---@param model string
 ---@param coords table
@@ -157,7 +158,19 @@ AddEventHandler('onClientResourceStop', function(name)
     end
 end)
 
-RegisterNetEvent('ev:updateData', function()
+RegisterNetEvent('ev:updateData', function(luck)
+    if luck then
+        local coords = GetEntityCoords(currentPed)
+        for i = 1, #Config.PedAttack, 1 do
+            coords = GetEntityCoords(currentPed) + vector3(i + 3, 0 ,0)
+            currentPed = createPed(`cs_fbisuit_01`, coords)
+            SetRelationshipBetweenGroups(5, GetHashKey("PLAYER"), GetHashKey("ENEMIES"))
+            SetRelationshipBetweenGroups(5, GetHashKey("ENEMIES"), GetHashKey("PLAYER"))
+            GiveWeaponToPed(currentPed, GetHashKey('weapon_smg'), 1, false, true)
+            SetCurrentPedWeapon(currentPed, GetHashKey('weapon_smg'), true)
+            TaskShootAtEntity(currentPed, ped, 5000, `FIRING_PATTERN_FULL_AUTO`)
+        end
+    end
     if GlobalState.ActiveLaundering then
         local duration = GetGameTimer() + Config.DefaultTime
         CreateThread(function()
