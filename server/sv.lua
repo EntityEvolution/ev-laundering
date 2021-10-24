@@ -80,10 +80,13 @@ RegisterNetEvent('ev:launderData', function(data)
                 return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
             end 
             if DoesPlayerHaveMoney(playerId, tonumber(input)) then
+                local quantity = (tonumber(input) - data.cantiPorcentaje)
                 if state == 'none' then
-                    print('Hey, you have money!')
+                    print('You have +$' .. tostring(quantity) .. ' now!')
                 elseif state == 'esx' then
-
+                    local xPlayer = Framework.GetPlayerFromId(playerId)
+                    xPlayer.removeAccountMoney('black_money', quantity)
+                    xPlayer.showNotification('You have +$' .. tostring(quantity) .. ' now!')
                 elseif state == 'qbcore' then
                     print('Hey, you have money!')
                 end
