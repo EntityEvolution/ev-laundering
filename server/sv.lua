@@ -78,7 +78,10 @@ local function notifyPolice(message, playerCoords)
                 xPlayer.showNotification(message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))))
             end
         elseif state == 'qbcore' then
-            TriggerClientEvent('QBCore:Notify', players[i], message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))), 'success')
+            local xPlayer = Framework.Functions.GetPlayer(players[i])
+            if xPlayer.PlayerData.job.name == Config.PoliceJob and xPlayer.PlayerData.job.onduty then
+                TriggerClientEvent('QBCore:Notify', players[i], message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))), 'success')
+            end
         end
     end
 end
