@@ -13,13 +13,13 @@ client_scripts {
 }
 server_script 'server/sv.lua'
 
-ui_page 'ui/index.html'
+ui_page 'ui/ui.html'
 
 files {
-    'ui/index.html',
+    'ui/ui.html',
     'ui/css/style.css',
     'ui/js/*.js',
-    'ui/fonts/*.ttf'
+    'ui/fonts/*.otf'
 }
 
 dependency 'PolyZone'
