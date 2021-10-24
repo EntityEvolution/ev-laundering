@@ -8,7 +8,6 @@
 
 * {
     overflow: hidden;
-
     user-drag: none;
     -webkit-user-drag: none;
     user-select: none;
@@ -27,7 +26,6 @@
     display: none;
     justify-content: center;
     align-items: center;
-    
 }
 
 .text {
@@ -60,7 +58,7 @@
     border-bottom: 2px solid white;
     padding: 0 .5vh;
     transition: 0.2s ease-in-out;
-    
+
     font-family: 'Titillium Web', sans-serif;
 }
 

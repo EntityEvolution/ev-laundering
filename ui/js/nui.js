@@ -11,6 +11,3 @@ const fetchNUI = async (cbname, data) => {
     const resp = await fetch(`https://ev-laundring/${cbname}`, options);
     return await resp.json();
 };
-
-
-

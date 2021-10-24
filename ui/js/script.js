@@ -23,7 +23,7 @@ window.addEventListener('load', () => {
         if (val < 0) {
             agree.textContent = 'Cannot have a negative input!'
         } else {
-            agree.textContent = `$${Math.ceil((val / 100) * porcentaje)} will be removed from your black money!`;
+            agree.textContent = `${porcentaje}% will be taken as taxes!`;
         }
      });
 
