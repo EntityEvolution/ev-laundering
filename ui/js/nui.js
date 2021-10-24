@@ -8,6 +8,6 @@ const fetchNUI = async (cbname, data) => {
         },
         body: JSON.stringify(data)
     };
-    const resp = await fetch(`https://ev-laundring/${cbname}`, options);
+    const resp = await fetch(`https://ev-laundering/${cbname}`, options);
     return await resp.json();
 };
