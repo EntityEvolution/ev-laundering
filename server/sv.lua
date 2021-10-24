@@ -74,7 +74,6 @@ local function notifyPolice(message, playerCoords)
         if state == 'esx' then
             local xPlayer = Framework.GetPlayerFromId(tonumber(players[i]))
             if xPlayer.getJob().name == Config.PoliceJob then
-                print('test')
                 xPlayer.showNotification(message:format(#(vec3(coords.x, coords.y, coords.z) - vec3(playerCoords.x, playerCoords.y, playerCoords.z))))
             end
         elseif state == 'qbcore' then
