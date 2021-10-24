@@ -15,3 +15,5 @@ This project does not contain a license, therefore you are not allowed to add on
 # Acknowledgment
 - [Fishii](https://github.com/fishiidev) for creating the UI and helping QBCore support.
 - [Vanilla-Tilt](https://micku7zu.github.io/vanilla-tilt.js/) for the parallax tilt effect implementation.
+
+[Video](https://streamable.com/jfgx6c)
