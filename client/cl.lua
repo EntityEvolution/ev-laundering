@@ -119,7 +119,11 @@ for _, v in pairs(Config.LaundryZones) do
                 if not GlobalState.ActiveLaundering then
                     if isInTime() and not isLaundryOpen then
                         showNotification(PlayerPedId(), Config.Locale.OpenZone:format(zone.name), zone.data.percentage)
-                        currentPed = createPed(zone.data.pedModel, zone.center, zone.data.dict, zone.data.anim, zone.data.scene)
+                        if Config.UsePeds then
+                            currentPed = createPed(zone.data.pedModel, zone.center, zone.data.dict, zone.data.anim, zone.data.scene)
+                        end
+                    else
+                        showNoti(Config.Locale.WrongHour)
                     end
                 else
                     showNoti(Config.Locale.SomeoneCleaned)
@@ -129,9 +133,11 @@ for _, v in pairs(Config.LaundryZones) do
             if insideZone then
                 insideZone = false
                 showNotification()
-                if DoesEntityExist(currentPed) then
-                    DeleteEntity(currentPed)
-                    currentPed = nil
+                if Config.UsePeds then
+                    if DoesEntityExist(currentPed) then
+                        DeleteEntity(currentPed)
+                        currentPed = nil
+                    end
                 end
             end
         end
@@ -158,9 +164,11 @@ end)
 
 AddEventHandler('onClientResourceStop', function(name)
     if GetCurrentResourceName() == name then
-        for _, v in pairs(createdPeds) do
-            if DoesEntityExist(v) then
-                DeletePed(v)
+        if Config.UsePeds then
+            for _, v in pairs(createdPeds) do
+                if DoesEntityExist(v) then
+                    DeletePed(v)
+                end
             end
         end
     end
