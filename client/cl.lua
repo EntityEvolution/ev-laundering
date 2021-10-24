@@ -64,8 +64,9 @@ end
 ---@param dict string
 ---@param anim string
 ---@param scene string
+---@param agressive boolean
 ---@return number
-local function createPed(model, coords, dict, anim, scene)
+local function createPed(model, coords, dict, anim, scene, agressive)
     RequestModel(model)
     local timeout = 0
     while not HasModelLoaded(model) and timeout < 1500 do
@@ -74,11 +75,18 @@ local function createPed(model, coords, dict, anim, scene)
     end
 
     local cPed = CreatePed(4, model, coords.x, coords.y, coords.z - 1.0, coords.w, false, false)
-    FreezeEntityPosition(cPed, true)
-    SetEntityInvincible(cPed, true)
-    SetBlockingOfNonTemporaryEvents(cPed, true)
-    SetPedFleeAttributes(cPed, 0, false)
-    SetPedCombatAttributes(cPed, 17, true)
+    if not agressive then
+        FreezeEntityPosition(cPed, true)
+        SetEntityInvincible(cPed, true)
+        SetBlockingOfNonTemporaryEvents(cPed, true)
+        SetPedFleeAttributes(cPed, 0, false)
+        SetPedCombatAttributes(cPed, 17, true)
+    else
+        SetPedRelationshipGroupHash(cPed, GetHashKey('launderDefense'))
+        SetRelationshipBetweenGroups(5, GetHashKey('PLAYER'), GetHashKey('launderDefense'))
+        SetRelationshipBetweenGroups(5, GetHashKey('launderDefense'), GetHashKey('PLAYER'))
+        SetPedCombatAttributes(cPed, 46, true)
+    end
 
     if Config.Anim and dict then
         local timeout2 = 0
@@ -160,15 +168,15 @@ end)
 
 RegisterNetEvent('ev:updateData', function(luck)
     if luck then
+        AddRelationshipGroup('launderDefense')
         local coords = GetEntityCoords(currentPed)
-        for i = 1, #Config.PedAttack, 1 do
-            coords = GetEntityCoords(currentPed) + vector3(i + 3, 0 ,0)
-            currentPed = createPed(`cs_fbisuit_01`, coords)
-            SetRelationshipBetweenGroups(5, GetHashKey("PLAYER"), GetHashKey("ENEMIES"))
-            SetRelationshipBetweenGroups(5, GetHashKey("ENEMIES"), GetHashKey("PLAYER"))
-            GiveWeaponToPed(currentPed, GetHashKey('weapon_smg'), 1, false, true)
-            SetCurrentPedWeapon(currentPed, GetHashKey('weapon_smg'), true)
-            TaskShootAtEntity(currentPed, ped, 5000, `FIRING_PATTERN_FULL_AUTO`)
+        local currPed
+        for i = 1, Config.PedAttack, 1 do
+            local spawnCoords = coords + vector3(math.random(-10, 10), math.random(-10, 10) ,0)
+            currPed = createPed(`cs_fbisuit_01`, spawnCoords, _, _, _, true)
+            GiveWeaponToPed(currPed, GetHashKey(Config.PedWeapon), 100, false, true)
+            SetCurrentPedWeapon(currPed, GetHashKey(Config.PedWeapon), true)
+            TaskShootAtEntity(currPed, ped, 5000, `FIRING_PATTERN_FULL_AUTO`)
         end
     end
     if GlobalState.ActiveLaundering then

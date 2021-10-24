@@ -25,7 +25,8 @@ Config.DefaultTime = 5000 -- In milliseconds
 
 Config.ContractKey = 38 -- Currently E
 
-Config.PedAttack = 5 -- If Config.Attack on serverside its on false it will not spawn these
+Config.PedAttack = 3 -- If Config.Attack on serverside its on false it will not spawn these
+Config.PedWeapon = 'WEAPON_PISTOL'
 
 Config.Locale = {
     OpenZone = 'Open contract in %s',
