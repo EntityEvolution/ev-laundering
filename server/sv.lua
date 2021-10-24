@@ -44,7 +44,7 @@ local function DoesPlayerHaveMoney(playerId, resultMoney)
             local xPlayer = Framework.Functions.GetPlayer(playerId)
             if xPlayer then
                 local blackMoney = xPlayer.Functions.GetItemByName('markedbills')
-                if blackMoney.amount > 0 then
+                if blackMoney and blackMoney.amount > 0 and not (blackMoney.amount < resultMoney) then
                     if blackMoney.info.worth < 5000000 then
                         if (blackMoney.info.worth - resultMoney) > 0 then
                             return true
@@ -53,7 +53,7 @@ local function DoesPlayerHaveMoney(playerId, resultMoney)
                         end
                     end
                 else
-                    TriggerClientEvent('QBCore:Notify', playerId, 'You do not have enough money!', 'error')
+                    TriggerClientEvent('QBCore:Notify', playerId, 'You do not have enough money or you are putting more than you have!', 'error')
                 end
             end
         end
@@ -90,11 +90,11 @@ RegisterNetEvent('ev:launderData', function(data)
                 elseif state == 'qbcore' then
                     local xPlayer = Framework.Functions.GetPlayer(playerId)
                     local blackMoney = xPlayer.Functions.GetItemByName('markedbills')
-                    local quantity = blackMoney.amount
-                    local worth = blackMoney.info.worth
-                    xPlayer.Functions.RemoveItem(quantity)
-                    xPlayer.Functions.AddMoney(worth * quantity)
-                    TriggerEvent('QBCore:Notify', 'Congrats, you just washed $' .. worth * quantity , 'success')
+                    local quantity = tonumber(input)
+                    local worth = math.ceil(blackMoney.info.worth - (data.porcentaje / 100) * blackMoney.info.worth)  --(blackMoney.info.worth * 100) / math.ceil(data.porcentaje / 100) bombay fix
+                    xPlayer.Functions.RemoveItem('markedbills', quantity)
+                    xPlayer.Functions.AddMoney('cash', worth * quantity)
+                    TriggerClientEvent('QBCore:Notify', playerId ,'Congrats, you just washed $' .. worth * quantity , 'success')
                 end
             end
         else
