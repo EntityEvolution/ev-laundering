@@ -5,6 +5,7 @@ RegisterNUICallback('getMoneyData', function(data, cb)
     if isLaundryOpen then
         print(data)
     end
+    SetNuiFocus(false, false)
     cb({})
 end)
 
@@ -19,25 +20,29 @@ local function isInTime()
     return false
 end
 
+---Show floating notification at coords
+---@param message string
+---@param coords table
+local function showFloatingNotification(message, coords)
+    AddTextEntry('laundryFloat', message)
+    SetFloatingHelpTextWorldPosition(1, coords.x, coords.y, coords.z)
+    SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
+    BeginTextCommandDisplayHelp('laundryFloat')
+    EndTextCommandDisplayHelp(2, false, false, -1)
+end
+
 ---Loads a notification
 ---@param ped number
 ---@param message string
 local function showNotification(ped, message)
-    ---Show floating notification at coords
-    ---@param coords any
-    local function showFloatingNotification(coords)
-        AddTextEntry('laundryFloat', message)
-        SetFloatingHelpTextWorldPosition(1, coords)
-        SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
-        BeginTextCommandDisplayHelp('laundryFloat')
-        EndTextCommandDisplayHelp(2, false, false, -1)
-    end
     CreateThread(function()
         while true do
-            local coords = GetEntityCoords()
-            showFloatingNotification(vec3(coords.x, coords.y, coords.z))
-            if IsControlJustReleased(0, 0) then
+            local coords = GetEntityCoords(ped)
+            showFloatingNotification(message, coords)
+            if IsControlJustReleased(0, Config.ContractKey) then
                 isLaundryOpen = true
+                SendNUIMessage({action = 'openMenu'})
+                SetNuiFocus(true, true)
                 break
             end
             Wait(5)
@@ -55,8 +60,6 @@ for _, v in pairs(Config.LaundryZones) do
         if isPointInside then
             if isInTime() then
                 showNotification(PlayerPedId(), Config.Locale.OpenZone:format(zone.name))
-            else
-
             end
         end
     end)

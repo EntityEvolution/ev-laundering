@@ -12,6 +12,8 @@ Config.LaundryZones = {
 Config.MinHours = 7
 Config.MaxHours = 19
 
+Config.ContractKey = 38
+
 Config.Locale = {
     OpenZone = 'Open contract in %s'
 }
