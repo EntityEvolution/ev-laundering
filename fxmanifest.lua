@@ -4,10 +4,13 @@ game 'gta5'
 lua54 'yes'
 use_fxv2_oal 'yes'
 
-shared_script 'config/config.lua'
-
-client_scripts 'client/cl.lua'
-
+client_scripts {
+    '@PolyZone/client.lua',
+    '@PolyZone/CircleZone.lua',
+	'@PolyZone/ComboZone.lua',
+    'config/config_cl.lua',
+    'client/cl.lua'
+}
 server_script 'server/sv.lua'
 
 ui_page 'ui/index.html'
@@ -18,3 +21,5 @@ files {
     'ui/js/*.js',
     'ui/fonts/*.ttf'
 }
+
+dependency 'PolyZone'
