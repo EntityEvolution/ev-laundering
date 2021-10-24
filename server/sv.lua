@@ -44,7 +44,6 @@ end
 
 RegisterNetEvent('ev:launderData', function(data)
     local playerId <const> = source
-    print(data)
     if type(data) ~="table" then
         --DropPlayer(playerId, 'Sus')
         return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
@@ -56,7 +55,6 @@ RegisterNetEvent('ev:launderData', function(data)
             --DropPlayer(playerId, 'sus')
             return false, print(tostring(playerId) .. ' tried doing some sus stuff in ' .. GetCurrentResourceName())
         end
-        print(math.ceil((tonumber(input) / 100) * data.porcentaje), data.cantiPorcentaje)
         if math.ceil((tonumber(input) / 100) * data.porcentaje) == data.cantiPorcentaje then
             if DoesPlayerHaveMoney(playerId, tonumber(input)) then
                 if state == 'none' then
